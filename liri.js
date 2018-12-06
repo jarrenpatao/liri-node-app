@@ -5,9 +5,10 @@ var keys = require("./keys");
 var Spotify = require('node-spotify-api');
 var spotify = new Spotify(keys.spotify);
 var bandsintown = keys.bandsintown;
+var omdbKey = keys.omdbKey;
 var moment = require('moment');
 var axios = require('axios');
-console.log(bandsintown);
+
 
 function bandsInTown(artist) {
   var url = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=" + bandsintown.id;
@@ -46,7 +47,15 @@ function spotifySearch(song) {
 }
 
 function omdb(movie) {
-  // OMDb movie function
+  var url = "http://www.omdbapi.com/?t=" + query + "/?apikey=" + omdbKey.id + "&";
+
+  axios.get(url)
+  .then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
 }
 
 var input = process.argv[2];
@@ -68,7 +77,7 @@ switch (input) {
     break;
   case "movie-this":
     console.log(`Query: ${query}`);
-    omdb();
+    omdb(query);
     break;
   case "do-what-it-says":
     readFile();
