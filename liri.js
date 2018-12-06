@@ -1,17 +1,79 @@
-require("dotenv").config();
-
-var keys = require('./keys.js');
+var result = require("dotenv").config();
+var fs = require('fs');
+var inquirer = require('inquirer');
+var keys = require("./keys");
 var Spotify = require('node-spotify-api');
 var spotify = new Spotify(keys.spotify);
- 
-spotify.search({ type: 'track', query: 'I want it that way' }, function(err, data) {
-  
-  if (err) {
-    return console.log('Error occurred: ' + err);
-  }
-  if (process.argv[2] === "concert-this") {
-    
-  }
+var bandsintown = keys.bandsintown;
+var moment = require('moment');
+var axios = require('axios');
+console.log(bandsintown);
 
-console.log(data); 
-});
+function bandsInTown(artist) {
+  var url = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=" + bandsintown.id;
+
+  console.log(`Searching for ${artist} concerts...\nURL: ${url}\n`);
+
+  axios.get(url)
+  .then(function (response) {
+  // console.log(response);
+
+    var data = response.data;
+    data.forEach(element => {
+      console.log(`Name: ${element.venue.name} \nLocation: ${element.venue.city}, ${element.venue.country} \nDate: ${moment(response.datetime).format("MM/DD/YYYY")}\n\n`);
+    });
+  })
+
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+function spotifySearch(song) {
+  spotify
+    .search({
+      type: 'track',
+      query: song
+    })
+    .then(function (response) {
+            
+      var data = response.tracks.items;
+
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+}
+
+function omdb(movie) {
+  // OMDb movie function
+}
+
+var input = process.argv[2];
+var query = process.argv.slice(3).join(" ");
+console.log(`Liri Command: ${input}`);
+
+
+switch (input) {
+  case "concert-this":
+    console.log(`Query: ${query}`);
+    bandsInTown(query);
+    break;
+  case "spotify-this-song":
+    if (query == "") {
+      query = "This Love";
+    }
+    console.log(`Query: ${query}\n`);
+    spotifySearch(query);
+    break;
+  case "movie-this":
+    console.log(`Query: ${query}`);
+    omdb();
+    break;
+  case "do-what-it-says":
+    readFile();
+    break;
+  default:
+    console.log(`Not a valid input.`);
+    break;
+}
