@@ -13,11 +13,11 @@ var axios = require('axios');
 function bandsInTown(artist) {
   var url = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=" + bandsintown.id;
 
-  console.log(`Searching for ${artist} concerts...\nURL: ${url}\n`);
+  // console.log(`Searching for ${artist} concerts...\nURL: ${url}\n`);
 
   axios.get(url)
   .then(function (response) {
-  // console.log(response);
+  console.log(JSON.stringify(response.config.url));
 
     var data = response.data;
     data.forEach(element => {
@@ -28,6 +28,7 @@ function bandsInTown(artist) {
   .catch(function (error) {
     console.log(error);
   });
+  
 }
 
 function spotifySearch(song) {
@@ -39,7 +40,8 @@ function spotifySearch(song) {
     .then(function (response) {
             
       var data = response.tracks.items;
-
+      var artist = JSON.stringify(response.artist);
+      console.log(JSON.stringify(response.tracks.items, null, 2));
     })
     .catch(function (err) {
       console.log(err);
@@ -47,7 +49,7 @@ function spotifySearch(song) {
 }
 
 function omdb(movie) {
-  var url = "http://www.omdbapi.com/?t=" + query + "/?apikey=" + omdbKey.id + "&";
+  var url = "http://www.omdbapi.com/?t=" + query + "&apikey=" + omdbKey.id;
 
   axios.get(url)
   .then(function (response) {
@@ -72,10 +74,15 @@ switch (input) {
     if (query == "") {
       query = "This Love";
     }
-    console.log(`Query: ${query}\n`);
+    console.log(`
+      Query: ${query}\n
+    `);
     spotifySearch(query);
     break;
   case "movie-this":
+    if (query == "") {
+      query = "Crash"
+    }
     console.log(`Query: ${query}`);
     omdb(query);
     break;
