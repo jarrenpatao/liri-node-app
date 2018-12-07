@@ -16,7 +16,7 @@ This CLI navigates through three api's: Bands In Town, Spotify, and OMDb. See al
   - process.argv[3] is the query word  
   - e.g. `node liri.js spotify-this-song "lil wayne"`
 
-- ![spotify-this-song][STSSS.png]
+![spotify-this-song][STSSS.png]
   
 - `concert-this` will queue a concert information search giving date and times
   - process.argv[3] is the query word  
@@ -26,6 +26,6 @@ This CLI navigates through three api's: Bands In Town, Spotify, and OMDb. See al
   - process.argv[3] is the query word  
   - e.g. `node liri.js movie-this crash`
   
-- ![movie-this][MTSS.png]
+![movie-this][MTSS.png]
 
 Have fun!
